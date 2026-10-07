@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Galleria Presentazioni HTML</title>
+<meta name="description" content="Nove presentazioni in HTML per un'azienda inventata, Selvana Caffè: per il cliente, il CdA, il team, il pubblico.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,400..800;1,400..800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: vetrina editoriale. Testata compatta (tesi + scheda dell'azienda inventata),
+   una riga di filtri, griglia di anteprime vive 3×3, poi un confronto onesto con PowerPoint. */
+:root{
+  --bg:#EEF1EC; --surface:#FAFBF8; --surface-2:#E3E8E1;
+  --ink:#15201A; --ink-2:#47534C; --muted:#6B776F; --line:#D3DAD1;
+  --brand:#1D3B2F; --accent:#B93A26; --gold:#93661A;
+  --chip-on-bg:#1D3B2F; --chip-on-fg:#F1F4EE;
+  --card-bg:#1D3B2F; --card-fg:#F1F4EE; --card-fg-2:rgba(241,244,238,.72); --card-line:rgba(241,244,238,.16); --card-gold:#E2B15B;
+  --frame:#15201A; --scrim:rgba(10,15,12,.55);
+  --good:#0E7A37; --mid:#94600A; --weak:#B5382B;
+  --viewer-bg:#0B100D; --viewer-fg:#E9EEE7; --viewer-fg-2:#9FAAA3; --viewer-line:#253029;
+
+  --font-display: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --gutter:clamp(16px,4vw,40px);
+  --radius:8px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1411; --surface:#151D18; --surface-2:#1C2620;
+    --ink:#ECF1EA; --ink-2:#B3BFB7; --muted:#879389; --line:#27322B;
+    --brand:#A9D2BB; --accent:#EC7A63; --gold:#E2B15B;
+    --chip-on-bg:#CFE3D6; --chip-on-fg:#0E1411;
+    --card-bg:#1D3B2F; --card-fg:#F1F4EE; --card-fg-2:rgba(241,244,238,.72); --card-line:rgba(241,244,238,.16); --card-gold:#E2B15B;
+    --frame:#050806; --scrim:rgba(0,0,0,.6);
+    --good:#45C277; --mid:#E2B15B; --weak:#F0806F;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1411; --surface:#151D18; --surface-2:#1C2620;
+  --ink:#ECF1EA; --ink-2:#B3BFB7; --muted:#879389; --line:#27322B;
+  --brand:#A9D2BB; --accent:#EC7A63; --gold:#E2B15B;
+  --chip-on-bg:#CFE3D6; --chip-on-fg:#0E1411;
+  --card-bg:#1D3B2F; --card-fg:#F1F4EE; --card-fg-2:rgba(241,244,238,.72); --card-line:rgba(241,244,238,.16); --card-gold:#E2B15B;
+  --frame:#050806; --scrim:rgba(0,0,0,.6);
+  --good:#45C277; --mid:#E2B15B; --weak:#F0806F;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 var(--font-body);-webkit-font-smoothing:antialiased}
+body.viewer-open{overflow:hidden}
+img,svg{max-width:100%}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+.wrap{max-width:1240px;margin-inline:auto;padding-inline:var(--gutter)}
+
+/* ---------- Testata ---------- */
+.masthead{padding-block:clamp(28px,5vw,56px) clamp(28px,4vw,44px);border-bottom:1px solid var(--line)}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:clamp(28px,5vw,52px)}
+.eyebrow{font:500 12px/1.3 var(--font-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.hero{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:clamp(24px,5vw,72px);align-items:end}
+.hero h1{font-family:var(--font-display);font-weight:700;font-size:clamp(36px,7.2vw,92px);line-height:.98;letter-spacing:-.02em;margin:0 0 22px;text-wrap:balance}
+.hero h1 em{font-style:italic;color:var(--accent)}
+.lead{font-size:clamp(17px,1.5vw,19px);line-height:1.6;color:var(--ink-2);max-width:60ch;margin:0}
+.lead strong{color:var(--ink);font-weight:600}
+
+.company{background:var(--card-bg);color:var(--card-fg);border-radius:var(--radius);padding:24px 24px 20px;display:grid;gap:18px}
+.company-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:12px}
+.brand{display:inline-flex;align-items:center;gap:.45em;font-size:30px;line-height:1}
+.bean{width:1.15em;height:1.15em;color:var(--card-gold);flex:none}
+.brand-word{font-family:var(--font-display);font-style:italic;font-weight:700;letter-spacing:-.01em}
+.company .tag{font:500 11px/1.3 var(--font-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--card-fg-2);border:1px solid var(--card-line);border-radius:999px;padding:5px 9px;white-space:nowrap}
+.company p{margin:0;color:var(--card-fg-2);font-size:15px;line-height:1.5}
+.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 18px;margin:0;padding-top:16px;border-top:1px solid var(--card-line)}
+.facts div{min-width:0}
+.facts dt{font:500 11px/1.3 var(--font-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--card-fg-2);margin-bottom:4px}
+.facts dd{margin:0;font-size:24px;font-weight:600;letter-spacing:-.01em}
+
+/* ---------- Filtri ---------- */
+.catalog{padding-block:clamp(28px,4vw,44px) 16px}
+.filters{display:flex;flex-wrap:wrap;gap:14px 28px;align-items:flex-start;margin-bottom:12px}
+.fgroup{display:flex;flex-wrap:wrap;align-items:center;gap:8px;border:0;margin:0;padding:0;min-width:0}
+.fgroup legend{float:left;font:500 12px/1.3 var(--font-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-right:6px;padding:0}
+.chip{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink-2);border-radius:999px;padding:7px 13px;font-size:14px;font-weight:500;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+.chip:hover{border-color:var(--ink-2);color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--chip-on-bg);border-color:var(--chip-on-bg);color:var(--chip-on-fg)}
+.count{font:500 13px/1.3 var(--font-mono);color:var(--muted);margin:0 0 22px;letter-spacing:.02em}
+.count button{appearance:none;border:0;background:none;padding:0;color:var(--accent);text-decoration:underline;text-underline-offset:3px;cursor:pointer;font:inherit}
+
+/* ---------- Griglia ---------- */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:clamp(20px,2.6vw,32px)}
+.tile{position:relative;display:flex;flex-direction:column;min-width:0}
+.tile[hidden]{display:none!important}
+.thumb{position:relative;aspect-ratio:16/10;max-width:100%;border-radius:var(--radius);overflow:hidden;background:var(--frame);transition:transform .25s ease, box-shadow .25s ease}
+.thumb .loading{position:absolute;inset:0;display:grid;place-items:center;font:500 12px/1 var(--font-mono);letter-spacing:.1em;text-transform:uppercase;color:rgba(241,244,238,.5)}
+.thumb iframe{position:absolute;left:0;top:0;width:1440px;height:900px;border:0;transform-origin:0 0;transform:scale(var(--s,.25));pointer-events:none;background:transparent}
+.thumb .who{position:absolute;left:10px;top:10px;z-index:2;font:600 11px/1 var(--font-mono);letter-spacing:.1em;text-transform:uppercase;background:rgba(15,21,18,.86);color:#F1F4EE;border-radius:999px;padding:7px 10px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.thumb .open-hint{position:absolute;inset:auto 10px 10px auto;z-index:2;font:600 13px/1 var(--font-body);background:#F1F4EE;color:#15201A;border-radius:999px;padding:9px 13px;opacity:0;transform:translateY(4px);transition:opacity .2s, transform .2s}
+.tile:hover .thumb,.tile:focus-within .thumb{transform:translateY(-3px);box-shadow:0 14px 30px -12px rgba(10,20,14,.45)}
+.tile:hover .open-hint,.tile:focus-within .open-hint{opacity:1;transform:none}
+.tile-body{padding-top:16px;display:flex;flex-direction:column;gap:8px;flex:1}
+.when{font:500 12px/1.4 var(--font-mono);letter-spacing:.04em;color:var(--muted)}
+.tile h3{margin:0;font-family:var(--font-display);font-weight:600;font-size:27px;line-height:1.1;letter-spacing:-.01em;text-wrap:balance}
+.tile p{margin:0;color:var(--ink-2);font-size:15.5px;line-height:1.55}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+.tags span{font:500 12px/1 var(--font-body);border:1px solid var(--line);border-radius:4px;padding:6px 8px;color:var(--ink-2);background:var(--surface)}
+.vs{margin-top:auto !important;padding-top:12px;border-top:1px solid var(--line);font-size:14px !important;color:var(--ink-2)}
+.vs b{font:600 11px/1 var(--font-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:5px}
+.tile-open{position:absolute;inset:0;z-index:3;appearance:none;border:0;background:transparent;cursor:pointer;border-radius:var(--radius)}
+.tile-open:focus-visible{outline:2px solid var(--accent);outline-offset:6px}
+.empty{grid-column:1/-1;padding:40px 0;color:var(--ink-2)}
+
+/* ---------- Confronto ---------- */
+.section{padding-block:clamp(48px,7vw,88px) 0}
+.section-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:clamp(20px,4vw,64px);align-items:end;margin-bottom:28px}
+.section h2{font-family:var(--font-display);font-weight:700;font-size:clamp(32px,4.4vw,56px);line-height:1.02;letter-spacing:-.015em;margin:10px 0 0;text-wrap:balance}
+.section-head p{margin:0;color:var(--ink-2);max-width:60ch}
+.table-wrap{overflow-x:auto;border-top:2px solid var(--ink)}
+table.cmp{width:100%;border-collapse:collapse;min-width:640px;font-size:15px}
+.cmp th,.cmp td{text-align:left;vertical-align:top;padding:16px 16px 16px 0;border-bottom:1px solid var(--line)}
+.cmp thead th{font:500 12px/1.3 var(--font-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding-top:14px}
+.cmp tbody th{font-weight:600;width:34%;padding-right:24px}
+.cmp td{color:var(--ink-2);width:33%}
+.mark{display:inline-flex;align-items:center;gap:7px;font-weight:600;color:var(--ink);margin-right:6px}
+.mark i{width:10px;height:10px;border-radius:50%;display:inline-block;flex:none}
+.mark.good i{background:var(--good)}
+.mark.mid i{background:transparent;border:2px solid var(--mid)}
+.mark.weak i{background:transparent;border:2px solid var(--weak);border-radius:2px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:14px;font-size:13px;color:var(--muted)}
+
+.notes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(20px,3vw,40px);margin-top:clamp(40px,6vw,64px);padding-top:28px;border-top:1px solid var(--line)}
+.notes h3{margin:0 0 8px;font-size:17px;font-weight:700}
+.notes p{margin:0;color:var(--ink-2);font-size:15px}
+
+footer.foot{margin-top:clamp(56px,8vw,96px);padding-block:28px 40px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+footer.foot .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+/* ---------- Visualizzatore ---------- */
+.viewer{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;background:var(--viewer-bg);color:var(--viewer-fg)}
+.viewer[hidden]{display:none!important}
+.vbar{display:flex;align-items:center;gap:10px;padding:8px 12px;padding-top:calc(8px + env(safe-area-inset-top,0px));border-bottom:1px solid var(--viewer-line);min-height:56px}
+.vbtn{appearance:none;border:1px solid var(--viewer-line);background:transparent;color:var(--viewer-fg);border-radius:999px;padding:8px 13px;font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.vbtn:hover{background:rgba(255,255,255,.08)}
+.vbtn:focus-visible{outline:2px solid #E2B15B;outline-offset:2px}
+.vtitle{flex:1;min-width:0;text-align:center;line-height:1.2}
+.vtitle small{display:block;font:500 11px/1.3 var(--font-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--viewer-fg-2)}
+.vtitle strong{display:block;font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vgroup{display:flex;gap:6px;align-items:center}
+.vframe{flex:1;width:100%;border:0;background:#fff;display:block}
+@media (max-width:760px){
+  .vbtn .lbl{display:none}
+  .vbtn{padding:8px 11px}
+  .vtitle small{display:none}
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width:900px){
+  .hero{grid-template-columns:minmax(0,1fr);align-items:start}
+  .section-head{grid-template-columns:1fr}
+  .notes{grid-template-columns:1fr}
+}
+@media (max-width:420px){
+  .facts dd{font-size:21px}
+  .tile h3{font-size:24px}
+}
+@media (prefers-reduced-motion:reduce){
+  .thumb,.thumb .open-hint,.chip{transition:none}
+  .tile:hover .thumb,.tile:focus-within .thumb{transform:none}
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="topline">
+      <span class="eyebrow">Workshop · Presentazioni in HTML</span>
+      <span class="eyebrow">9 demo · 1 azienda inventata</span>
+    </div>
+    <div class="hero">
+      <div>
+        <h1>Un'azienda, <em>nove</em> presentazioni.</h1>
+        <p class="lead">Selvana Caffè non esiste. L'abbiamo inventata per raccontarla a pubblici diversi: un cliente, il consiglio di amministrazione, i responsabili interni, chi entra in azienda, il mercato. <strong>Ogni riquadro è una presentazione vera, fatta in HTML.</strong> Aprila e provala: si calcola, si filtra, si aggiorna, cambia strada.</p>
+      </div>
+      <aside class="company" aria-label="L'azienda protagonista">
+        <div class="company-head">
+          <span class="brand"><svg class="bean" viewBox="0 0 32 32" aria-hidden="true"><g transform="rotate(-32 16 16)"><ellipse cx="16" cy="16" rx="9.5" ry="13.5" fill="currentColor"/><path d="M16 3.5c-3.2 4.3-2.6 8.3 0 12.5s3.2 8.2 0 12.5" fill="none" stroke="var(--card-bg)" stroke-width="2" stroke-linecap="round"/></g></svg><span class="brand-word">Selvana</span></span>
+          <span class="tag">Azienda inventata</span>
+        </div>
+        <p>Torrefazione di Bergamo, dal 1961. Caffè per bar, hotel, uffici e supermercati, capsule compostabili, filiera diretta in sei paesi d'origine.</p>
+        <dl class="facts">
+          <div><dt>Ricavi 2025</dt><dd>186,4 M€</dd></div>
+          <div><dt>Persone</dt><dd>640</dd></div>
+          <div><dt>Locali serviti</dt><dd>9.800</dd></div>
+          <div><dt>Paesi export</dt><dd>34</dd></div>
+        </dl>
+      </aside>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="catalog" aria-labelledby="catalogTitle">
+    <div class="wrap">
+      <h2 id="catalogTitle" class="eyebrow" style="margin:0 0 18px">Le presentazioni</h2>
+      <div class="filters">
+        <fieldset class="fgroup" id="fAudience">
+          <legend>Per chi</legend>
+        </fieldset>
+        <fieldset class="fgroup" id="fCap">
+          <legend>Cosa fa l'HTML</legend>
+        </fieldset>
+      </div>
+      <p class="count" id="count" aria-live="polite"></p>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="cmpTitle">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">Il confronto, senza tifo</span>
+          <h2 id="cmpTitle">Cosa cambia rispetto a PowerPoint</h2>
+        </div>
+        <p>L'HTML vince quando la presentazione deve fare qualcosa: calcolare, rispondere a una domanda, aggiornarsi, adattarsi a chi guarda. PowerPoint resta più comodo quando tanti colleghi devono modificare lo stesso file a mano.</p>
+      </div>
+      <div class="table-wrap">
+        <table class="cmp">
+          <thead><tr><th scope="col">Cosa ti serve</th><th scope="col">PowerPoint</th><th scope="col">HTML</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Fare i conti con i numeri del cliente durante la riunione</th>
+              <td><span class="mark weak"><i></i>Fuori</span>Si apre Excel e si incolla il risultato.</td>
+              <td><span class="mark good"><i></i>Dentro</span>Il calcolatore è nella slide.</td></tr>
+            <tr><th scope="row">Rispondere a una domanda sui dati che non avevi previsto</th>
+              <td><span class="mark mid"><i></i>Se preparata</span>Servono slide di riserva fatte prima.</td>
+              <td><span class="mark good"><i></i>Al momento</span>Filtri e dettaglio con un click.</td></tr>
+            <tr><th scope="row">Dati sempre aggiornati</th>
+              <td><span class="mark weak"><i></i>Fermi</span>Al giorno in cui hai salvato il file.</td>
+              <td><span class="mark good"><i></i>Alla fonte</span>Letti di nuovo a ogni apertura.</td></tr>
+            <tr><th scope="row">Un percorso diverso per ogni pubblico</th>
+              <td><span class="mark mid"><i></i>Fragile</span>Collegamenti tra slide che nessuno mantiene.</td>
+              <td><span class="mark good"><i></i>Naturale</span>Si sceglie il percorso all'inizio.</td></tr>
+            <tr><th scope="row">Condividere e far leggere da telefono</th>
+              <td><span class="mark mid"><i></i>Allegato</span>File pesante, si legge male da mobile.</td>
+              <td><span class="mark good"><i></i>Un link</span>Si adatta allo schermo.</td></tr>
+            <tr><th scope="row">Modifica dell'ultimo minuto fatta da chiunque</th>
+              <td><span class="mark good"><i></i>Facile</span>Tutti sanno cambiare un testo.</td>
+              <td><span class="mark mid"><i></i>Con l'AI</span>Si chiede la modifica a parole a un assistente.</td></tr>
+            <tr><th scope="row">Lavorare in tanti sullo stesso file</th>
+              <td><span class="mark good"><i></i>Maturo</span>Commenti e coedizione in tempo reale.</td>
+              <td><span class="mark weak"><i></i>Scomodo</span>Meglio una persona che tiene il file.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="legend" aria-hidden="true">
+        <span class="mark good"><i></i>punto di forza</span>
+        <span class="mark mid"><i></i>si può, con fatica</span>
+        <span class="mark weak"><i></i>punto debole</span>
+      </div>
+
+      <div class="notes">
+        <div>
+          <h3>Come sono state fatte</h3>
+          <p>Ogni demo è un singolo file HTML, scritto con un assistente AI partendo da un brief di una pagina: chi è l'azienda, chi guarda, cosa deve succedere.</p>
+        </div>
+        <div>
+          <h3>Come si aprono</h3>
+          <p>Con un doppio click, nel browser. Nessun programma da installare. Si inviano per mail, si caricano su Drive, si pubblicano con un link.</p>
+        </div>
+        <div>
+          <h3>Quando restare su PowerPoint</h3>
+          <p>Se la presentazione è statica, se la modificano in tanti, o se deve finire dentro il template aziendale approvato.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <span>Selvana Caffè è un'azienda inventata. Nomi, persone e numeri sono di fantasia, a scopo dimostrativo.</span>
+    <span>Galleria per workshop · ottobre 2026</span>
+  </div>
+</footer>
+
+<div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-labelledby="vTitle" hidden>
+  <div class="vbar">
+    <button class="vbtn" id="vClose" type="button" aria-label="Torna alla galleria">← <span class="lbl">Galleria</span></button>
+    <div class="vgroup">
+      <button class="vbtn" id="vPrev" type="button" aria-label="Presentazione precedente">‹</button>
+      <button class="vbtn" id="vNext" type="button" aria-label="Presentazione successiva">›</button>
+    </div>
+    <div class="vtitle"><small id="vWho"></small><strong id="vTitle"></strong></div>
+    <div class="vgroup">
+      <button class="vbtn" id="vFull" type="button" aria-label="Schermo intero">⤢ <span class="lbl">Schermo intero</span></button>
+      <a class="vbtn" id="vTab" href="#" target="_blank" rel="noopener" hidden>↗ <span class="lbl">Nuova scheda</span></a>
+    </div>
+  </div>
+  <iframe class="vframe" id="vFrame" title="Presentazione" allow="fullscreen"></iframe>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var AUDIENCES = [
+    {id:"tutti",   label:"Tutti"},
+    {id:"clienti", label:"Clienti"},
+    {id:"vertici", label:"Vertici"},
+    {id:"team",    label:"Team interno"},
+    {id:"esterno", label:"Pubblico esterno"}
+  ];
+  var CAPS = [
+    {id:"tutte",     label:"Tutto"},
+    {id:"calcoli",   label:"Calcoli dal vivo"},
+    {id:"grafici",   label:"Grafici interattivi"},
+    {id:"percorsi",  label:"Percorsi a scelta"},
+    {id:"live",      label:"Dati live"},
+    {id:"animazioni",label:"Animazioni"},
+    {id:"quiz",      label:"Quiz"}
+  ];
+
+  var DEMOS = [
+    {id:"cliente", file:"demo/01_proposta_cliente.html", audience:"clienti", who:"Per il cliente",
+     title:"Proposta Levante Hotels", when:"Riunione di vendita con un gruppo alberghiero",
+     desc:"Una proposta che fa i conti dal vivo: si muovono i cursori con i numeri del cliente e il riepilogo finale si compila da solo.",
+     caps:["calcoli"], tags:["Calcolatore","Scelte che restano tra le slide","Pianta cliccabile"],
+     vs:"In PowerPoint il calcolo si rifà in Excel e si incolla il risultato."},
+    {id:"board", file:"demo/02_board_cda.html", audience:"vertici", who:"Per il CdA",
+     title:"CdA Terzo Trimestre 2026", when:"Consiglio di amministrazione, risultati al 30 settembre",
+     desc:"I numeri si interrogano in riunione: confronto con budget o anno prima, dettaglio per canale con un click, simulatore di scenario.",
+     caps:["grafici","calcoli"], tags:["Drill-down","Cascata EBITDA","Simulatore"],
+     vs:"In PowerPoint la domanda del consigliere diventa «ve lo mandiamo dopo»."},
+    {id:"roadshow", file:"demo/03_roadshow_strategia.html", audience:"team", who:"Per i responsabili",
+     title:"Piano Selvana 2027", when:"Roadshow della strategia ai responsabili interni",
+     desc:"Un deck classico che si usa come PowerPoint, con in più vista d'insieme, note del relatore e un link diretto a ogni slide.",
+     caps:["animazioni"], tags:["Note del relatore","Vista d'insieme","Link a ogni slide"],
+     vs:"Qui è quasi un pareggio. Il vantaggio è che si apre da un link, senza allegati."},
+    {id:"storia", file:"demo/04_storia_65_anni.html", audience:"esterno", who:"Per il pubblico",
+     title:"Selvana 65 anni", when:"Anniversario: evento, sito, clienti",
+     desc:"Si legge scorrendo, come un racconto. La pagina si tosta mentre scendi e i numeri si animano quando arrivano.",
+     caps:["animazioni"], tags:["Racconto a scorrimento","Curva di tostatura","Funziona da telefono"],
+     vs:"Una storia a scorrimento si legge bene da telefono. Un file .pptx no."},
+    {id:"report", file:"demo/05_report_sostenibilita.html", audience:"esterno", who:"Per gli stakeholder",
+     title:"Bilancio di Sostenibilità 2025", when:"Report per clienti, buyer e stakeholder",
+     desc:"Un documento lungo che si consulta: menu che segue la lettura, filtri per origine, tabella ordinabile, stampa pulita in PDF.",
+     caps:["grafici"], tags:["Menu che segue la lettura","Tabella ordinabile","Pronto per il PDF"],
+     vs:"Un report in PDF si sfoglia. Questo si interroga."},
+    {id:"percorsi", file:"demo/06_percorsi_commerciali.html", audience:"clienti", who:"Per il cliente",
+     title:"Chi abbiamo davanti?", when:"Presentazione commerciale per quattro tipi di cliente",
+     desc:"Il commerciale sceglie il tipo di cliente e la presentazione cambia strada: ognuno vede solo le slide che lo riguardano.",
+     caps:["percorsi","calcoli"], tags:["Quattro percorsi","Mappa del percorso","Finale su misura"],
+     vs:"In PowerPoint si fa con i collegamenti tra slide: fragile, e nessuno lo mantiene."},
+    {id:"live", file:"demo/07_cruscotto_live.html", audience:"team", who:"Per acquisti e direzione",
+     title:"Cruscotto Acquisti Live", when:"Riunione settimanale degli acquisti",
+     desc:"Legge i cambi del giorno da internet, ricalcola il costo del caffè verde e accetta il link CSV di un tuo foglio Google.",
+     caps:["live","grafici","calcoli"], tags:["Cambi in tempo reale","Foglio Google collegato","Flusso ordini"],
+     vs:"Un grafico in PowerPoint è fermo al giorno in cui hai salvato il file."},
+    {id:"onboarding", file:"demo/08_onboarding.html", audience:"team", who:"Per chi entra in azienda",
+     title:"Benvenuti in Selvana", when:"Primo giorno dei nuovi assunti",
+     desc:"Un percorso da fare, non da guardare: organigramma cliccabile, carte da girare e un quiz finale con attestato.",
+     caps:["quiz"], tags:["Saluto personalizzato","Carte da girare","Quiz con punteggio"],
+     vs:"In PowerPoint il quiz si fa a voce, e nessuno sa chi ha capito cosa."},
+    {id:"lancio", file:"demo/09_lancio_origini.html", audience:"esterno", who:"Per il lancio",
+     title:"Selvana Origini", when:"Lancio di una nuova linea di prodotto",
+     desc:"Scegli un'origine e cambia colore tutta la pagina. Il radar del gusto si trasforma, il conto alla rovescia è vero.",
+     caps:["animazioni"], tags:["Configuratore","Radar del gusto","Conto alla rovescia"],
+     vs:"Le animazioni di PowerPoint seguono i clic. Qui reagiscono alle scelte."}
+  ];
+
+  var state = {audience:"tutti", cap:"tutte"};
+  var grid = document.getElementById("grid");
+  var countEl = document.getElementById("count");
+  var embedded = false;
+  try { embedded = window.self !== window.top; } catch(e){ embedded = true; }
+
+  /* ---------- Filtri ---------- */
+  function buildChips(container, list, key){
+    list.forEach(function(item){
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "chip"; b.id = "chip-" + key + "-" + item.id;
+      b.textContent = item.label;
+      b.setAttribute("aria-pressed", String(state[key] === item.id));
+      b.addEventListener("click", function(){
+        state[key] = item.id;
+        container.querySelectorAll(".chip").forEach(function(c){ c.setAttribute("aria-pressed", String(c === b)); });
+        applyFilters();
+      });
+      container.appendChild(b);
+    });
+  }
+  buildChips(document.getElementById("fAudience"), AUDIENCES, "audience");
+  buildChips(document.getElementById("fCap"), CAPS, "cap");
+
+  function matches(d){
+    return (state.audience === "tutti" || d.audience === state.audience) &&
+           (state.cap === "tutte" || d.caps.indexOf(state.cap) !== -1);
+  }
+  function visibleDemos(){ return DEMOS.filter(matches); }
+
+  function resetFilters(){
+    state.audience = "tutti"; state.cap = "tutte";
+    document.querySelectorAll(".chip").forEach(function(c){
+      c.setAttribute("aria-pressed", String(c.id === "chip-audience-tutti" || c.id === "chip-cap-tutte"));
+    });
+    applyFilters();
+  }
+
+  function applyFilters(){
+    var n = 0;
+    DEMOS.forEach(function(d){
+      var show = matches(d);
+      d.el.hidden = !show;
+      if (show) n++;
+    });
+    var empty = document.getElementById("empty");
+    if (empty) empty.hidden = n !== 0;
+    countEl.textContent = "";
+    if (n === DEMOS.length){
+      countEl.textContent = DEMOS.length + " presentazioni";
+    } else {
+      countEl.appendChild(document.createTextNode(n + (n === 1 ? " presentazione" : " presentazioni") + " su " + DEMOS.length + " · "));
+      var r = document.createElement("button");
+      r.type = "button"; r.textContent = "mostra tutte"; r.addEventListener("click", resetFilters);
+      countEl.appendChild(r);
+    }
+    requestAnimationFrame(fitThumbs);
+  }
+
+  /* ---------- Riquadri ---------- */
+  function el(tag, cls, text){
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+
+  DEMOS.forEach(function(d){
+    var art = el("article", "tile"); art.id = "tile-" + d.id;
+    var thumb = el("div", "thumb");
+    thumb.appendChild(el("span", "loading", "Anteprima"));
+    var fr = document.createElement("iframe");
+    fr.src = d.file + "#thumb";
+    fr.title = "Anteprima: " + d.title;
+    fr.setAttribute("loading", "lazy");
+    fr.setAttribute("tabindex", "-1");
+    fr.setAttribute("aria-hidden", "true");
+    fr.setAttribute("scrolling", "no");
+    thumb.appendChild(fr);
+    thumb.appendChild(el("span", "who", d.who));
+    thumb.appendChild(el("span", "open-hint", "Apri →"));
+    art.appendChild(thumb);
+
+    var body = el("div", "tile-body");
+    body.appendChild(el("span", "when", d.when));
+    body.appendChild(el("h3", null, d.title));
+    body.appendChild(el("p", null, d.desc));
+    var tags = el("div", "tags");
+    d.tags.forEach(function(t){ tags.appendChild(el("span", null, t)); });
+    body.appendChild(tags);
+    var vs = el("p", "vs");
+    vs.appendChild(el("b", null, "Rispetto a PowerPoint"));
+    vs.appendChild(document.createTextNode(d.vs));
+    body.appendChild(vs);
+    art.appendChild(body);
+
+    var open = el("button", "tile-open");
+    open.type = "button";
+    open.setAttribute("aria-label", "Apri la presentazione: " + d.title);
+    open.addEventListener("click", function(){ openViewer(d.id, open); });
+    art.appendChild(open);
+
+    d.el = art; d.thumb = thumb;
+    grid.appendChild(art);
+  });
+  var empty = el("p", "empty", "Nessuna presentazione con questa combinazione di filtri.");
+  empty.id = "empty"; empty.hidden = true;
+  grid.appendChild(empty);
+
+  /* Le anteprime sono le pagine vere caricate a 1440×900 e rimpicciolite. */
+  function fitThumbs(){
+    DEMOS.forEach(function(d){
+      var w = d.thumb.clientWidth;
+      if (w) d.thumb.style.setProperty("--s", (w / 1440).toFixed(4));
+    });
+  }
+  if ("ResizeObserver" in window){
+    var ro = new ResizeObserver(fitThumbs);
+    DEMOS.forEach(function(d){ ro.observe(d.thumb); });
+  } else {
+    window.addEventListener("resize", fitThumbs);
+  }
+  fitThumbs();
+  applyFilters();
+
+  /* ---------- Visualizzatore ---------- */
+  var viewer = document.getElementById("viewer");
+  var vFrame = document.getElementById("vFrame");
+  var vTitle = document.getElementById("vTitle");
+  var vWho = document.getElementById("vWho");
+  var vTab = document.getElementById("vTab");
+  var vFull = document.getElementById("vFull");
+  var current = null, returnFocus = null;
+
+  if (!document.fullscreenEnabled && !document.webkitFullscreenEnabled) vFull.hidden = true;
+  if (!embedded) vTab.hidden = false;
+
+  function byId(id){ for (var i=0;i<DEMOS.length;i++){ if (DEMOS[i].id === id) return DEMOS[i]; } return null; }
+
+  function setHash(h){
+    try { history.replaceState(null, "", h ? "#" + h : location.pathname + location.search); } catch(e){}
+  }
+
+  function openViewer(id, from){
+    var d = byId(id); if (!d) return;
+    if (from) returnFocus = from;
+    current = d;
+    vTitle.textContent = d.title;
+    vWho.textContent = d.who;
+    vTab.href = d.file;
+    vFrame.title = d.title;
+    vFrame.src = d.file;
+    viewer.hidden = false;
+    document.body.classList.add("viewer-open");
+    setHash(d.id);
+    document.getElementById("vClose").focus();
+  }
+  vFrame.addEventListener("load", function(){
+    if (!viewer.hidden){ try { vFrame.focus(); } catch(e){} }
+  });
+
+  function closeViewer(){
+    var last = current;
+    viewer.hidden = true;
+    document.body.classList.remove("viewer-open");
+    vFrame.src = "about:blank";
+    current = null;
+    setHash("");
+    /* Torna sul riquadro dell'ultima presentazione vista, anche se ci si è arrivati con ‹ › */
+    var target = (last && !last.el.hidden) ? last.el.querySelector(".tile-open") : returnFocus;
+    if (target) { try { target.focus(); } catch(e){} }
+  }
+
+  function step(dir){
+    if (!current) return;
+    var list = visibleDemos();
+    if (list.indexOf(current) === -1) list = DEMOS;
+    var i = list.indexOf(current);
+    var next = list[(i + dir + list.length) % list.length];
+    openViewer(next.id);
+  }
+
+  document.getElementById("vClose").addEventListener("click", closeViewer);
+  document.getElementById("vPrev").addEventListener("click", function(){ step(-1); });
+  document.getElementById("vNext").addEventListener("click", function(){ step(1); });
+  vFull.addEventListener("click", function(){
+    var fn = vFrame.requestFullscreen || vFrame.webkitRequestFullscreen;
+    if (!fn) return;
+    try {
+      var p = fn.call(vFrame);
+      if (p && p.catch) p.catch(function(){});
+    } catch(e){}
+  });
+  document.addEventListener("keydown", function(e){
+    if (viewer.hidden) return;
+    if (e.key === "Escape") { e.preventDefault(); closeViewer(); }
+  });
+
+  /* Collegamento diretto: galleria#board apre subito il CdA. */
+  var start = (location.hash || "").replace("#", "");
+  if (start && byId(start)) openViewer(start);
+})();
+</script>
+</body>
+</html>
